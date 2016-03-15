@@ -6,6 +6,7 @@ $(function() {
   Kii.initializeWithSite(appID, appKey, KiiSite.US);
  }());
 
+//サインアップをクリック
 $("#btn_sing_up").click(function(){
   // 開発者ポータルにて取得した Application ID と Application Key を設定して初期化
   var emailVal = $("#inputEmail").val();
@@ -19,10 +20,26 @@ $("#btn_sing_up").click(function(){
   }else {
     alert("未入力があります。");
   }
+});
+
+//サインインをクリック
+$("#btn_sing_in").click(function(){
+  // 開発者ポータルにて取得した Application ID と Application Key を設定して初期化
+  var nameVal = $("#inputUserName").val();
+  var passVal = $("#inputPass").val();
+  //入力項目が空欄でなければ
+  if(nameVal != "" && passVal != "" ){
+      console.log("push sign in" + "\n" + nameVal + "\n" + passVal);
+      //Kiicloudへサインイン
+      signIn(nameVal, passVal);
+  }else {
+    alert("未入力があります。");
+  }
 
 });
 
-//kiicloudへ登録
+
+//kiicloudへ登録 サインアップ
 function resisterUser(emailVal, nameVal, passVal){
   var user = KiiUser.userWithEmailAddressAndUsername(emailVal, nameVal, passVal);
 
@@ -40,4 +57,22 @@ function resisterUser(emailVal, nameVal, passVal){
      console.log("Error registering: " + errorString);
    }
  });
+}
+
+//kiicloudにサインイン
+function signIn(username, password){
+  // Authenticate the user
+  KiiUser.authenticate(username, password, {
+    // Called on successful authentication
+    success: function(theUser) {
+      // Print some info to the log
+      console.log("User authenticated!");
+      console.log(theUser);
+    },
+    // Called on a failed authentication
+    failure: function(theUser, errorString) {
+      // Print some info to the log
+      console.log("Error authenticating: " + errorString);
+    }
+  })
 }
